@@ -40,18 +40,20 @@ class BreedsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getListImagesBreeds([String? id, int page = 0]) async {
+  Future<int> getListImagesBreeds([String? id, int page = 0]) async {
       final params = GestImagesBreedsUseCaseParams(
         breedIds: (id != null) ? [id] : [],
         page: page.toString(),
       );
       state = Loading();
       notifyListeners();
+      var list;
       final result = await getImagesBreedsUseCase(params);
       result.fold(
         (failure) => state = Error(failure: failure),
         (data) {
           state = Loaded(value: data);
+          list = data;
           if (page == 0) {
             listImageBreed = data;
           } else {
@@ -60,6 +62,7 @@ class BreedsProvider extends ChangeNotifier {
         },
       );
       notifyListeners();
+      return list.length;
     }
 
     Future<void> getImageBreed(String id) async {

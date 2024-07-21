@@ -119,6 +119,7 @@ class _BreedsPageState extends State<BreedsPage> {
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         itemCount: images.length,
+        cacheExtent:200,
         itemBuilder: (context, index) {
           final size = getRandomSize();
           return InkWell(
@@ -130,7 +131,9 @@ class _BreedsPageState extends State<BreedsPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: CachedNetworkImage(
-                  imageUrl:images[index].url,
+                  maxHeightDiskCache: 200,
+                  key: PageStorageKey(images[index].id), // Añadir la clave de almacenamiento de página
+                  imageUrl: images[index].url,
                   width: size.width,
                   height: size.height,
                   fit: BoxFit.cover,
@@ -176,7 +179,7 @@ class _BreedsPageState extends State<BreedsPage> {
 
 Size getRandomSize() {
     final random = Random();
-    final width = 100 + random.nextInt(100);
+    final width = 50 + random.nextInt(50);
     final height = 100 + random.nextInt(100);
     return Size(width.toDouble(), height.toDouble());
   }
@@ -186,9 +189,10 @@ Size getRandomSize() {
     if(provider.state is Loading) return;
     page = page+1;
     
-    await provider.getListImagesBreeds(_selectedBreed.id=='0'?null:_selectedBreed.id, page);
+    final res = await provider.getListImagesBreeds(_selectedBreed.id=='0'?null:_selectedBreed.id, page);
+    if(res == 0) return;
     _scrollController.animateTo(
-        _scrollController.offset + 40.0,
+        _scrollController.offset + 10.0,
         curve: Curves.fastOutSlowIn,
         duration: const Duration(seconds: 1),
       );
