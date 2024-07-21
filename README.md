@@ -61,7 +61,7 @@ The RemoteDataSource will perform HTTP GET requests on the API. LocalDataSource 
 
 # Config Env
 
-    - Create file /lib/core/util/env.dart
+    - Create file /lib/core/utils/env.dart
         - `class Env {
             static String baseApiUrl = 'https://api.thecatapi.com';
             static String token = 'YOUR TOKEN';
